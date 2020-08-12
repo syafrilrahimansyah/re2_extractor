@@ -34,6 +34,8 @@ public class XpathListDAOimpl implements XpathListDAO{
 				xpath.setParent_1(rs.getString("PARENT_1"));
 				xpath.setParent_2(rs.getString("PARENT_2"));
 				xpath.setMultiplevalue(rs.getBoolean("MULTIPLEVALUE"));
+				xpath.setRemap(rs.getBoolean("REMAP"));
+				xpath.setRemap_delimiter(rs.getString("REMAP_DELIMITER"));
 				return xpath;
 			}
 		});

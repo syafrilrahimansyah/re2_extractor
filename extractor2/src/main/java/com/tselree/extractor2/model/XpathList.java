@@ -6,6 +6,22 @@ public class XpathList {
 	private String parent_1;
 	private String parent_2;
 	private Boolean multiplevalue;
+	private Boolean remap;
+	private String remap_delimiter;
+	
+	
+	public String getRemap_delimiter() {
+		return remap_delimiter;
+	}
+	public void setRemap_delimiter(String remap_delimiter) {
+		this.remap_delimiter = remap_delimiter;
+	}
+	public Boolean getRemap() {
+		return remap;
+	}
+	public void setRemap(Boolean remap) {
+		this.remap = remap;
+	}
 	public String getXcolumn() {
 		return xcolumn;
 	}

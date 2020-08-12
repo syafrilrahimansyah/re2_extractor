@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.tselree.extractor2.DAO.EntityDAO;
 import com.tselree.extractor2.DAO.OmniformDAO;
+import com.tselree.extractor2.DAO.RemapDAO;
 import com.tselree.extractor2.DAO.XpathGroupDAO;
 import com.tselree.extractor2.DAO.XpathListDAO;
 import com.tselree.extractor2.model.PayloadInfo;
@@ -27,6 +28,8 @@ public class MainTask {
 	private XpathListDAO xpathListDAO;
 	@Autowired
 	private EntityDAO entityDAO;
+	@Autowired
+	private RemapDAO remapDAO;
 	
 	private static final Logger log = LoggerFactory.getLogger(MainTask.class);
 	@Scheduled(fixedRate = 5000)
@@ -35,6 +38,7 @@ public class MainTask {
 		if(id != null) {
 			log.info("New Omniform Found");
 			log.info("Fetching Omniform Information");
+			//INITIATION
 			String payload_path = omniformDAO.getPath(id);
 			PayloadInfo payloadInfo = new XpathCompiler().payloadInfo(payload_path);
 			List<XpathGroup> listXpathGroup = xpathGroupDAO.listGroup(payloadInfo.getType());
@@ -42,35 +46,56 @@ public class MainTask {
 			for(XpathGroup xpathGroup : listXpathGroup) {
 				log.info("Preparing Extraction | Table: "+ xpathGroup.getEntity_table());
 				List<XpathList> listXpathList = xpathListDAO.xpathList(xpathGroup.getXgroup());
+				//XPATH NODE CALCULATION
 				Integer loop_1 = new XpathCompiler().loop_1(payload_path, xpathGroup.getXparent_1());
 				for(int x = 1;x<=loop_1;x++) {
+					//LOOP NODE
 					if(!xpathGroup.getXparent_2().equals("")) {
+						//LOOP NODE'
 						String key_id = new XpathCompiler().key_id(payload_path, xpathGroup.getKey_xparent(), x, xpathGroup.getKey_xchild());
 						entityDAO.delete("`"+xpathGroup.getEntity_table()+"`", xpathGroup.getKey_column(), key_id);
 						Integer loop_2 = new XpathCompiler().loop_2(payload_path, xpathGroup.getXparent_1(), x, xpathGroup.getXparent_2());
 						for(int y = 1;y<=loop_2;y++) {
 							log.info("Extracting: "+xpathGroup.getEntity_table()+" | Index: "+x+" - "+y);
 							List<String> listColumn = new ArrayList<>();
+							//EXTRACTION
 							List<String> listValue = new XpathCompiler().extc_value(payload_path, listXpathList, x, y);
+							List<String> listMap = new ArrayList<>();
 							for(XpathList xpathList : listXpathList) {
 								listColumn.add(xpathList.getXcolumn());
+								
 							}
 							String column = String.join(",", listColumn);
 							String value = String.join(",", listValue);
-							entityDAO.insert("`"+xpathGroup.getEntity_table()+"`", column, value);
+							//ENTITY INSERTION
+							int key_map = entityDAO.insert("`"+xpathGroup.getEntity_table()+"`", column, value);
+							//GUID REMAP LIST
+							for(XpathList xpathList : listXpathList) {
+								if(xpathList.getRemap()) {
+									remapDAO.remapGUID(xpathGroup.getEntity_table(), xpathList.getXcolumn(), key_map, xpathList.getRemap_delimiter());
+								}
+							}
 						}
 					}else {
 						log.info("Extracting: "+xpathGroup.getEntity_table()+" | Index: "+x);
 						String key_id = new XpathCompiler().key_id(payload_path, xpathGroup.getKey_xparent(), x, xpathGroup.getKey_xchild());
 						entityDAO.delete("`"+xpathGroup.getEntity_table()+"`", xpathGroup.getKey_column(), key_id);
 						List<String> listColumn = new ArrayList<>();
+						//EXTRACTION
 						List<String> listValue = new XpathCompiler().extc_value(payload_path, listXpathList, x, 1);
 						for(XpathList xpathList : listXpathList) {
 							listColumn.add(xpathList.getXcolumn());
 						}
 						String column = String.join(",", listColumn);
 						String value = String.join(",", listValue);
-						entityDAO.insert("`"+xpathGroup.getEntity_table()+"`", column, value);
+						//ENTITY INSERTION
+						int key_map = entityDAO.insert("`"+xpathGroup.getEntity_table()+"`", column, value);
+						//GUID REMAP LIST
+						for(XpathList xpathList : listXpathList) {
+							if(xpathList.getRemap()) {
+								remapDAO.remapGUID(xpathGroup.getEntity_table(), xpathList.getXcolumn(), key_map, xpathList.getRemap_delimiter());
+							}
+						}
 					}
 				}
 			}

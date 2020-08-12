@@ -27,7 +27,19 @@ public class XpathCompiler {
 		
 		PayloadInfo check = new PayloadInfo();
 		check.setId(xpath.evaluate("/Root/Package/@BusinessID", document));
-		check.setType(xpath.evaluate("/Root/Package/@type", document));
+		
+		if(!xpath.evaluate("/Root/Package/@type", document).equals("")) {
+			check.setType(xpath.evaluate("/Root/Package/@type", document));
+		}
+		else if(!xpath.evaluate("/Root/Product_Zones/@type", document).equals("")) {
+			check.setType(xpath.evaluate("/Root/Product_Zones/@type", document));
+		}
+		else if(!xpath.evaluate("/Root/Price_Zones/@type", document).equals("")) {
+			check.setType(xpath.evaluate("/Root/Price_Zones/@type", document));
+		}
+		else {
+			check.setType(null);
+		}
 		return check;
 	}
 	public String key_id(String xml, String key_parent, int x, String key_child) throws Exception{

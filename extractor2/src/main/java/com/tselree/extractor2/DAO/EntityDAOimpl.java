@@ -1,11 +1,18 @@
 package com.tselree.extractor2.DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import com.tselree.extractor2.MainTask;
 
@@ -19,13 +26,24 @@ public class EntityDAOimpl implements EntityDAO{
 
 
 	@Override
-	public void insert(String table, String column, String value) {
+	public Integer insert(String table, String column, String value) {
 		try {
+			GeneratedKeyHolder holder = new GeneratedKeyHolder();
 			String sql = "INSERT INTO "+table+"("+column+") VALUES("+value+")";
-			jdbcTemplate.update(sql);
+			jdbcTemplate.update(new PreparedStatementCreator() {
+			    @Override
+			    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+			        PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			        return statement;
+			    }
+			}, holder);
+			Integer id = holder.getKey().intValue();
+			return id;
 		}catch(DuplicateKeyException e) {
 			log.info(e.getMessage());
+			return null;
 		}
+		
 	}
 
 

@@ -13,6 +13,8 @@ import com.tselree.extractor2.DAO.EntityDAO;
 import com.tselree.extractor2.DAO.EntityDAOimpl;
 import com.tselree.extractor2.DAO.OmniformDAO;
 import com.tselree.extractor2.DAO.OmniformDAOimpl;
+import com.tselree.extractor2.DAO.RemapDAO;
+import com.tselree.extractor2.DAO.RemapDAOimpl;
 import com.tselree.extractor2.DAO.XpathGroupDAO;
 import com.tselree.extractor2.DAO.XpathGroupDAOimpl;
 
@@ -39,6 +41,17 @@ public class DBConfig {
          
         return dataSource;
     }
+	/*
+	@Bean()
+    public DataSource getDataSource3() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://parakoder.com:3306/parakode_re2_entity?serverTimezone=UTC&useLegacyDatetimeCode=false");
+        dataSource.setUsername("parakode_re2_entity");
+        dataSource.setPassword("re2Ent1ty");
+         
+        return dataSource;
+    }*/
 	@Bean()
     public OmniformDAO getOmniformDAO() {
     	return new OmniformDAOimpl(getDataSource2());
@@ -54,5 +67,9 @@ public class DBConfig {
 	@Bean()
 	public EntityDAO getEntityDAO() {
 		return new EntityDAOimpl(getDataSource3());
+	}
+	@Bean
+	public RemapDAO getRemapDAO() {
+		return new RemapDAOimpl(getDataSource2());
 	}
 }
