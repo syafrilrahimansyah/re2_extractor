@@ -1,6 +1,9 @@
 package com.tselree.extractor2;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -60,11 +63,17 @@ public class MainTask {
 							List<String> listColumn = new ArrayList<>();
 							//EXTRACTION
 							List<String> listValue = new XpathCompiler().extc_value(payload_path, listXpathList, x, y);
-							List<String> listMap = new ArrayList<>();
 							for(XpathList xpathList : listXpathList) {
 								listColumn.add(xpathList.getXcolumn());
 								
 							}
+							//DATE FORMAT
+							DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+							Date dateobj = new Date();
+							//MODIFIED
+							listColumn.add("MODIFIED");
+							listValue.add("'"+df.format(dateobj)+"'");
+							//JOIN DATA
 							String column = String.join(",", listColumn);
 							String value = String.join(",", listValue);
 							//ENTITY INSERTION
@@ -86,6 +95,13 @@ public class MainTask {
 						for(XpathList xpathList : listXpathList) {
 							listColumn.add(xpathList.getXcolumn());
 						}
+						//DATE FORMAT
+						DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+						Date dateobj = new Date();
+						//MODIFIED
+						listColumn.add("MODIFIED");
+						listValue.add("'"+df.format(dateobj)+"'");
+						//JOIN DATA
 						String column = String.join(",", listColumn);
 						String value = String.join(",", listValue);
 						//ENTITY INSERTION

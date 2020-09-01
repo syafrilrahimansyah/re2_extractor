@@ -31,17 +31,17 @@ public class DBConfig {
          
         return dataSource;
     }
-	@Bean()
-    public DataSource getDataSource3() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/entity?serverTimezone=UTC&useLegacyDatetimeCode=false");
-        dataSource.setUsername("pmauser");
-        dataSource.setPassword("alvin147");
-         
-        return dataSource;
-    }
+	
 	/*
+	 * @Bean() public DataSource getDataSource3() { DriverManagerDataSource
+	 * dataSource = new DriverManagerDataSource();
+	 * dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver"); dataSource.setUrl(
+	 * "jdbc:mysql://localhost:3306/entity?serverTimezone=UTC&useLegacyDatetimeCode=false"
+	 * ); dataSource.setUsername("pmauser"); dataSource.setPassword("alvin147");
+	 * 
+	 * return dataSource; }
+	 */
+	
 	@Bean()
     public DataSource getDataSource3() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -51,7 +51,7 @@ public class DBConfig {
         dataSource.setPassword("re2Ent1ty");
          
         return dataSource;
-    }*/
+    }
 	@Bean()
     public OmniformDAO getOmniformDAO() {
     	return new OmniformDAOimpl(getDataSource2());
