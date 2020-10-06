@@ -56,7 +56,7 @@ public class MainTask {
 					if(!xpathGroup.getXparent_2().equals("")) {
 						//LOOP NODE'
 						String key_id = new XpathCompiler().key_id(payload_path, xpathGroup.getKey_xparent(), x, xpathGroup.getKey_xchild());
-						entityDAO.delete("`"+xpathGroup.getEntity_table()+"`", xpathGroup.getKey_column(), key_id);
+						entityDAO.delete(xpathGroup.getEntity_table(), xpathGroup.getKey_column(), key_id);
 						Integer loop_2 = new XpathCompiler().loop_2(payload_path, xpathGroup.getXparent_1(), x, xpathGroup.getXparent_2());
 						for(int y = 1;y<=loop_2;y++) {
 							log.info("Extracting: "+xpathGroup.getEntity_table()+" | Index: "+x+" - "+y);
@@ -65,7 +65,6 @@ public class MainTask {
 							List<String> listValue = new XpathCompiler().extc_value(payload_path, listXpathList, x, y);
 							for(XpathList xpathList : listXpathList) {
 								listColumn.add(xpathList.getXcolumn());
-								
 							}
 							//DATE FORMAT
 							DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
@@ -77,18 +76,22 @@ public class MainTask {
 							String column = String.join(",", listColumn);
 							String value = String.join(",", listValue);
 							//ENTITY INSERTION
-							int key_map = entityDAO.insert("`"+xpathGroup.getEntity_table()+"`", column, value);
-							//GUID REMAP LIST
-							for(XpathList xpathList : listXpathList) {
-								if(xpathList.getRemap()) {
-									remapDAO.remapGUID(xpathGroup.getEntity_table(), xpathList.getXcolumn(), key_map, xpathList.getRemap_delimiter());
+							try {
+								int key_map = entityDAO.insert(xpathGroup.getEntity_table(), column, value);
+								//GUID REMAP LIST
+								for(XpathList xpathList : listXpathList) {
+									if(xpathList.getRemap()) {
+										remapDAO.remapGUID(xpathGroup.getEntity_table(), xpathList.getXcolumn(), key_map, xpathList.getRemap_delimiter());
+									}
 								}
+							}catch(NullPointerException e) {
+								System.out.println(e);
 							}
 						}
 					}else {
 						log.info("Extracting: "+xpathGroup.getEntity_table()+" | Index: "+x);
 						String key_id = new XpathCompiler().key_id(payload_path, xpathGroup.getKey_xparent(), x, xpathGroup.getKey_xchild());
-						entityDAO.delete("`"+xpathGroup.getEntity_table()+"`", xpathGroup.getKey_column(), key_id);
+						entityDAO.delete(xpathGroup.getEntity_table(), xpathGroup.getKey_column(), key_id);
 						List<String> listColumn = new ArrayList<>();
 						//EXTRACTION
 						List<String> listValue = new XpathCompiler().extc_value(payload_path, listXpathList, x, 1);
@@ -104,13 +107,18 @@ public class MainTask {
 						//JOIN DATA
 						String column = String.join(",", listColumn);
 						String value = String.join(",", listValue);
+						
 						//ENTITY INSERTION
-						int key_map = entityDAO.insert("`"+xpathGroup.getEntity_table()+"`", column, value);
-						//GUID REMAP LIST
-						for(XpathList xpathList : listXpathList) {
-							if(xpathList.getRemap()) {
-								remapDAO.remapGUID(xpathGroup.getEntity_table(), xpathList.getXcolumn(), key_map, xpathList.getRemap_delimiter());
+						try {
+							int key_map = entityDAO.insert(xpathGroup.getEntity_table(), column, value);
+							//GUID REMAP LIST
+							for(XpathList xpathList : listXpathList) {
+								if(xpathList.getRemap()) {
+									remapDAO.remapGUID(xpathGroup.getEntity_table(), xpathList.getXcolumn(), key_map, xpathList.getRemap_delimiter());
+								}
 							}
+						}catch(NullPointerException e) {
+							System.out.println(e);
 						}
 					}
 				}

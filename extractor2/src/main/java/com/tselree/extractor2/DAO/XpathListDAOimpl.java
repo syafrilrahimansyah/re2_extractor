@@ -21,7 +21,7 @@ public class XpathListDAOimpl implements XpathListDAO{
 	@Override
 	public List<XpathList> xpathList(String xgroup) {
 		// TODO Auto-generated method stub
-		String sql = "SELECT * FROM XPATH_LIST WHERE XGROUP = '"+xgroup+"'";
+		String sql = "SELECT * FROM extc_xpath_list WHERE XGROUP = '"+xgroup+"'";
 		
 		List<XpathList> listXpath = jdbcTemplate.query(sql, new RowMapper<XpathList>() {
 

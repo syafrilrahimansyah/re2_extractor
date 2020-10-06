@@ -121,12 +121,27 @@ public class XpathCompiler {
 		        
 			}else {
 				if(xpathList.getParent_1().equals("") && xpathList.getParent_2().equals("")) {
-					valueList.add("'"+xpath.evaluate(xpathList.getPath(), document)+"'");
+					String result = xpath.evaluate(xpathList.getPath(), document);
+					if(result.equals("")) {
+						valueList.add(null);
+					}else {
+						valueList.add("'"+result+"'");
+					}					
 				}
 				else if(!xpathList.getParent_1().equals("") && xpathList.getParent_2().equals("")) {
-					valueList.add("'"+xpath.evaluate(xpathList.getParent_1()+"["+x+"]"+xpathList.getPath(), document)+"'");
+					String result = xpath.evaluate(xpathList.getParent_1()+"["+x+"]"+xpathList.getPath(), document);
+					if(result.equals("")) {
+						valueList.add(null);
+					}else {
+						valueList.add("'"+result+"'");
+					}
 				}else {
-					valueList.add("'"+xpath.evaluate(xpathList.getParent_1()+"["+x+"]"+xpathList.getParent_2()+"["+y+"]"+xpathList.getPath(), document)+"'");
+					String result = xpath.evaluate(xpathList.getParent_1()+"["+x+"]"+xpathList.getParent_2()+"["+y+"]"+xpathList.getPath(), document);
+					if(result.equals("")) {
+						valueList.add(null);
+					}else {
+						valueList.add("'"+result+"'");
+					}
 				}
 			}
 		}

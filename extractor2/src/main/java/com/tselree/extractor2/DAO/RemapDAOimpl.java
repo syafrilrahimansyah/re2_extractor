@@ -13,7 +13,7 @@ public class RemapDAOimpl implements RemapDAO{
 	
 	@Override
 	public void remapGUID(String table, String column, int key, String delimiter) {
-		String sql = "INSERT INTO `MAP_LIST`(`ID`, `TABLE`, `COLUMN`, `KEY`, `DELIMITER`, `STAGE`) VALUES(NULL, '"+table+"', '"+column+"', "+key+", '"+delimiter+"', 'ext')";
+		String sql = "INSERT INTO extc_map_list(\"table\", \"column\", \"key\", \"delimiter\", stage) VALUES('"+table+"', '"+column+"', "+key+", '"+delimiter+"', 'ext')";
 		jdbcTemplate.update(sql);
 	}
 

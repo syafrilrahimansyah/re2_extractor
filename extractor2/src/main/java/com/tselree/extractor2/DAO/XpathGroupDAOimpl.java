@@ -22,7 +22,7 @@ public class XpathGroupDAOimpl implements XpathGroupDAO{
 	public List<XpathGroup> listGroup(String type) {
 		try {
 			// TODO Auto-generated method stub
-			String sql = "SELECT * FROM XPATH_CONF WHERE OMNIFORM_TYPE = '"+type+"'";
+			String sql = "SELECT * FROM extc_xpath_conf WHERE OMNIFORM_TYPE = '"+type+"'";
 			List<XpathGroup> xpathGroup = jdbcTemplate.query(sql, new RowMapper<XpathGroup>() {
 				@Override
 				public XpathGroup mapRow(ResultSet rs, int rowNum) throws SQLException {

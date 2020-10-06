@@ -29,7 +29,7 @@ public class EntityDAOimpl implements EntityDAO{
 	public Integer insert(String table, String column, String value) {
 		try {
 			GeneratedKeyHolder holder = new GeneratedKeyHolder();
-			String sql = "INSERT INTO "+table+"("+column+") VALUES("+value+")";
+			String sql = "INSERT INTO re2ety_"+table+"("+column+") VALUES("+value+")";
 			jdbcTemplate.update(new PreparedStatementCreator() {
 			    @Override
 			    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -37,9 +37,9 @@ public class EntityDAOimpl implements EntityDAO{
 			        return statement;
 			    }
 			}, holder);
-			Integer id = holder.getKey().intValue();
+			Integer id = (Integer) holder.getKeys().get("id");
 			return id;
-		}catch(DuplicateKeyException e) {
+		}catch(Exception e) {
 			log.info(e.getMessage());
 			return null;
 		}
@@ -49,7 +49,7 @@ public class EntityDAOimpl implements EntityDAO{
 
 	@Override
 	public void delete(String table, String column, String value) {
-		String sql = "DELETE FROM "+table+" WHERE "+column+" = '"+value+"'";
+		String sql = "DELETE FROM re2ety_"+table+" WHERE "+column+" = '"+value+"'";
 		jdbcTemplate.update(sql);
 	}
 }
