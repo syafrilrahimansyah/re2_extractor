@@ -16,7 +16,7 @@ public class OmniformDAOimpl implements OmniformDAO{
 	@Override
 	public Integer getNew() {
 		try {
-			String sql = "SELECT MIN(ID) FROM extc_omniform WHERE STAGE = 'col'";
+			String sql = "SELECT MIN(ID) FROM public.extc_omniform WHERE STAGE = 'col'";
 			return jdbcTemplate.queryForObject(sql, Integer.class);
 		}
 		catch (EmptyResultDataAccessException e) {
@@ -27,7 +27,7 @@ public class OmniformDAOimpl implements OmniformDAO{
 	@Override
 	public String getPath(Integer id) {
 		try {
-			String sql = "SELECT PATH FROM extc_omniform WHERE ID = '"+id+"'";
+			String sql = "SELECT PATH FROM public.extc_omniform WHERE ID = '"+id+"'";
 			return jdbcTemplate.queryForObject(sql, String.class);
 		}
 		catch (EmptyResultDataAccessException e) {
@@ -37,7 +37,7 @@ public class OmniformDAOimpl implements OmniformDAO{
 
 	@Override
 	public void updateStage(Integer id) {
-		String sql = "UPDATE extc_omniform SET STAGE = 'ext' WHERE ID = '"+id+"'";
+		String sql = "UPDATE public.extc_omniform SET STAGE = 'ext' WHERE ID = '"+id+"'";
 		jdbcTemplate.update(sql);		
 	}
 
