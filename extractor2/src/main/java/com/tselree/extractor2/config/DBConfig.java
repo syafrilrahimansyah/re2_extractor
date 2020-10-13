@@ -23,7 +23,7 @@ import com.tselree.extractor2.DAO.XpathGroupDAOimpl;
 
 @Configuration
 @PropertySource({
-    "file:src/main/resources/application.properties" 
+    "file:src/main/resources/extractor_application.properties" 
 })
 
 public class DBConfig {
